@@ -22,7 +22,7 @@ const bookList:React.FC<BookListProps> = ({dispatch,filterBooks,booksPerPage}) =
 
   const indexOfLastBook = currentPage * booksPerPage;
 const indexOfFirstBook = indexOfLastBook - booksPerPage;
-const currentBooks = filterBooks.slice(indexOfFirstBook, indexOfLastBook);
+const currentBooks = filterBooks && filterBooks.slice(indexOfFirstBook, indexOfLastBook);
 const totalPages = Math.ceil(filterBooks.length / booksPerPage);
 
 
