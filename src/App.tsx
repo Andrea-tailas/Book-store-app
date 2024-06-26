@@ -3,8 +3,6 @@ import './App.css'
 import Form from './components/form'
 import BookList from './components/bookList'
 import useBooksReducer from './hooks/bookReducer'
-// import BookListPage from "../src/components/pages"
-
 
 function App() {
   const [state, dispatch] = useBooksReducer()
@@ -14,10 +12,7 @@ function App() {
   }, [dispatch])
 
   const filterBooks = state.books && state.books.filter((book) => book.title.toLowerCase().includes(state.searchquery.toLowerCase()))
-
-  const currentBooks = filterBooks && filterBooks.slice((state.currentpage - 1) * state.booksperpage, state.currentpage * state.booksperpage)
-
-  
+  const booksPerPage:number=5;
 
 
   return (
@@ -29,7 +24,7 @@ function App() {
       <div className='search'>
       <input type='text' placeholder='Enter book to search...' value={state.searchquery} onChange={handleSearch} title="text"/>
       </div>
-      <BookList  books={currentBooks} dispatch={dispatch}/>
+      <BookList  dispatch={dispatch} filterBooks={filterBooks} booksPerPage={booksPerPage}/>
      </div>
     </div>
     </>

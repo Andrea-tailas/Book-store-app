@@ -1,21 +1,31 @@
 import "../App.css"
-import React,{useState} from 'react'
+import React,{useState,useCallback} from 'react'
 import {ActionType} from '../alltypes'
 import {Book} from '../alltypes'
 
 import "../App.css"
 interface BookListProps {
-  books:Book[]
   dispatch: React.Dispatch<ActionType>;
-  // setCount: any;
-
+  booksPerPage:number;
+  filterBooks:Book[];
 }
 
-const bookList:React.FC<BookListProps> = ({books,dispatch}) => {
+
+
+const bookList:React.FC<BookListProps> = ({dispatch,filterBooks,booksPerPage}) => {
+  const [currentPage, setCurrentPage] = useState(1);
   const [editBook, setEditBook] = useState<number>(0);
   const [editTitle, setEditTitle] = useState("");
   const [editAuthor, setEditAuthor] = useState("");
   const [editPublicationYear, setEditPublicationYear] = useState<number>(0);
+
+
+  const indexOfLastBook = currentPage * booksPerPage;
+const indexOfFirstBook = indexOfLastBook - booksPerPage;
+const currentBooks = filterBooks.slice(indexOfFirstBook, indexOfLastBook);
+const totalPages = Math.ceil(filterBooks.length / booksPerPage);
+
+
 
   const handleDeleteBook = (id: number) => {
     dispatch({ type: "DELETE_BOOK", payload: id });
@@ -39,7 +49,9 @@ const handleSaveEdit = (id:number) => {
 }});setEditBook(0)
 }
 
-
+const handlePageChange = useCallback((Num:number) => {
+  setCurrentPage(Num)
+}, []);
   
 
 
@@ -53,9 +65,9 @@ const handleSaveEdit = (id:number) => {
             <th>Publication Year</th>
             <th id="actions" >Actions</th>
           </tr>
-          {books && books.map((book) => (
-            <tr key={book.id}>
-              <td>{editBook===book.id ? (
+          {currentBooks && currentBooks.map((filterBooks) => (
+            <tr key={filterBooks.id}>
+              <td>{editBook===filterBooks.id ? (
                 <input
                   type="text"
                   value={editTitle}
@@ -63,10 +75,10 @@ const handleSaveEdit = (id:number) => {
                   title="title"
                 />
               ) : (
-                book.title
+                filterBooks.title
               )
               }</td>
-              <td>{editBook===book.id ? (
+              <td>{editBook===filterBooks.id ? (
                 <input
                   type="text"
                   value={editAuthor}
@@ -74,9 +86,9 @@ const handleSaveEdit = (id:number) => {
                   title="author"
                 />
               ) : (
-                book.author
+                filterBooks.author
               )}</td>
-              <td>{editBook===book.id ? (
+              <td>{editBook===filterBooks.id ? (
                 <input
                   type="number"
                   value={editPublicationYear}
@@ -84,17 +96,17 @@ const handleSaveEdit = (id:number) => {
                   title="publicationYear"
                 />
               ) : (
-                book.publicationYear
+                filterBooks.publicationYear
               
               )}</td>
               <td>
-                {editBook === book.id ? (
-                  <button onClick={()=>handleSaveEdit(book.id)}>Save</button>
+                {editBook === filterBooks.id ? (
+                  <button onClick={()=>handleSaveEdit(filterBooks.id)}>Save</button>
 
                 ) : (
                   <>
-                  <button onClick={() => handleUpdateBook(book)}>Update</button>
-                  <button onClick={() => handleDeleteBook(book.id)}>Delete</button>
+                  <button onClick={() => handleUpdateBook(filterBooks)}>Update</button>
+                  <button onClick={() => handleDeleteBook(filterBooks.id)}>Delete</button>
                   </>
                 )
                 }
@@ -104,6 +116,21 @@ const handleSaveEdit = (id:number) => {
           ))}
         </tbody>
      </table>
+     <div>
+        <button onClick={()=>{handlePageChange(currentPage - 1)}}
+         disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={()=>{handlePageChange (currentPage + 1)}}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   )
 }
