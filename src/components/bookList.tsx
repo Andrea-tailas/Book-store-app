@@ -53,7 +53,7 @@ const handleSaveEdit = (id:number) => {
             <th>Publication Year</th>
             <th>Actions</th>
           </tr>
-          {books.map((book) => (
+          {books && books.map((book) => (
             <tr key={book.id}>
               <td>{editBook===book.id ? (
                 <input

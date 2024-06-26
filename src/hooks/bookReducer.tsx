@@ -24,21 +24,21 @@ export const reducer = (state: state, action: ActionType): state => {
     case "READ_BOOK":
         return {
             ...state,
-            books: state.books.map((book: Book) =>
+            books: state.books && state.books.map((book: Book) =>
                 book.id === action.payload ? { ...book } : book
             ),
             }
     case "UPDATE_BOOK":
       return {
         ...state,
-        books: state.books.map((book: Book) =>
+        books: state.books && state.books.map((book: Book) =>
           book.id === action.payload.id ? action.payload : book
         ),
       };
     case "DELETE_BOOK":
       return {
         ...state,
-        books: state.books.filter((book: Book) => book.id !== action.payload),
+        books: state.books && state.books.filter((book: Book) => book.id !== action.payload),
       };
     default:
       return state;
