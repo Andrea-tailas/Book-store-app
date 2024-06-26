@@ -45,13 +45,13 @@ const handleSaveEdit = (id:number) => {
 
   return (
     <div className="booklist">
-    <table border={1} cellPadding={10}>
+    <table border={1} >
         <tbody>
         <tr>
             <th>Title</th>
             <th>Author</th>
             <th>Publication Year</th>
-            <th>Actions</th>
+            <th id="actions" >Actions</th>
           </tr>
           {books && books.map((book) => (
             <tr key={book.id}>
